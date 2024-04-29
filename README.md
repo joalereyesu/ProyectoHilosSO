@@ -19,5 +19,5 @@ Basándome en los resultados, recomendaría paralelizar a nivel de archivo en lu
 #### 4. ¿Cuál es el factor de mejora de pasar de 1 Core a 2 Core para el proceso que paraleliza los archivos?
 El factor de mejora de pasar de 1 core - 1 hilo a 2 cores - 2 hilos es de aproximadamente 1.17. Esto significa un speedup modesto.
 
-### 5. Determine el factor teórico de mejora para el escenario de 2 Core (Ley de Amdahl) al paralelizar por archivo y función estadística
+#### 5. Determine el factor teórico de mejora para el escenario de 2 Core (Ley de Amdahl) al paralelizar por archivo y función estadística
 La ley de Amdahl establece que el speedup de un programa es limitado por la fraccion del programa que no se puede paralelizar. 
