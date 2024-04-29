@@ -1,6 +1,6 @@
 # ProyectoHilosSO
 
-## Comandos a correr:
+### Comandos a correr:
 ```
 docker build -t parallel-processing-app .
 chmod -R 777 so_output
