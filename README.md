@@ -20,11 +20,4 @@ Basándome en los resultados, recomendaría paralelizar a nivel de archivo en lu
 El factor de mejora de pasar de 1 core - 1 hilo a 2 cores - 2 hilos es de aproximadamente 1.17. Esto significa un speedup modesto.
 
 #### 5. Determine el factor teórico de mejora para el escenario de 2 Core (Ley de Amdahl) al paralelizar por archivo y función estadística
-
-	ARCHIVOS	FUNCIONES
-1 CORE - 4 HILOS	7.300942993	5.706129932
-2 CORES - 4 HILOS	5.174388623	5.774914432
-		
-Factor de mejora (P)	1.410976934	0.988089088
-N 	2	2
-S	0.772492152	0.664030265![image](https://github.com/joalereyesu/ProyectoHilosSO/assets/61555348/67e8ec83-b365-41f6-b044-117544dbc92f)
+![image](https://github.com/joalereyesu/ProyectoHilosSO/assets/61555348/67e8ec83-b365-41f6-b044-117544dbc92f)
