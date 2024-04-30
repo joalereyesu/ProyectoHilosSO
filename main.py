@@ -6,9 +6,12 @@ import time
 import shutil
 import sys
 
+# EN NUESTRO CODIGO SE CREA UNA NUEVA IMAGEN EN DOCKER CADA VEZ QUE SE CORREN LOS COMANDOS
+
 def compute_statistics(data, num_workers=1, parallel=False):
     stats = {}
-    columns = [col for col in data.columns if col != 'dates']  # Ensure correct column name
+    columns = [col for col in data.columns if col != 'dates'] 
+    # Si es paralelo se inicializa la ThreadPool para procesar en paralelo las estadisticas de los archivos
     if parallel:
         with ThreadPoolExecutor(max_workers=num_workers) as executor:
             results = list(executor.map(lambda col: (col, {
@@ -20,6 +23,7 @@ def compute_statistics(data, num_workers=1, parallel=False):
             }), columns))
             for col, result in results:
                 stats[col] = result
+    #Si no es en paralelo, las estadisticas se generan sencuencialmente. 
     else:
         for column in columns:
             stats[column] = {
@@ -31,19 +35,22 @@ def compute_statistics(data, num_workers=1, parallel=False):
             }
     return stats
 
+# Funcion para decidir si los archivos se van a procesar, ya sea secuencial o en paralelo
 def process_files_sequentially(data_folder, stats_function, num_workers=1, parallel_stats=False):
     start_time = time.time()
     files = [os.path.join(data_folder, f) for f in os.listdir(data_folder) if f.endswith('.csv')]
     if parallel_stats:
-        # If parallel, use ThreadPoolExecutor to handle file processing
+        # Si es en paralelo, se utilizo ThreadPoolExecutor para manejar el procesamiento de los datos
         with ThreadPoolExecutor(max_workers=num_workers) as executor:
-            results = list(executor.map(lambda file_path: process_file(file_path, stats_function, num_workers, parallel_stats), files))
+            results = list(executor.map(lambda file_path: process_file(file_path, stats_function, num_workers, parallel_stats), files)) # Se manda a llamar la funcion de abajo
+                                                                                                                    # para procesar los archivos
     else:
-        # If not parallel, process files one by one
+        # Si no es paralelo se procesan los archivos uno por uno (secuencialmente)
         for file_path in files:
             process_file(file_path, stats_function, num_workers, parallel_stats)
     return time.time() - start_time
 
+# En esta funcion es donde se procesan los archivos
 def process_file(file_path, stats_function, num_workers, parallel_stats):
     print(f"Processing file: {file_path}")
     data = pd.read_csv(file_path)
@@ -61,7 +68,7 @@ def process_file(file_path, stats_function, num_workers, parallel_stats):
     output_df.to_csv(output_path, header=True, index=False)
 
 def main(num_workers):
-   # Clear the output directory contents
+   # Vacio el folder so_output si existen archivos ya creados
     output_dir = 'so_output'
     if os.path.exists(output_dir):
         for filename in os.listdir(output_dir):
@@ -91,6 +98,10 @@ def main(num_workers):
     parallel_functions_time = process_files_sequentially('so_data', compute_statistics, 1, parallel_stats=True)
     end_time = time.time()
     total_parallel_functions_time = end_time - start_time
+
+    # Se utiliza la misma funcion process_files_sequentially, lo unico que cambia son los parametros en donde se especifican los
+    # hilos (workers) y si es paralelo o no. Dentro de la funcion process_files_sequentially se condicona para ver si se realiza secuencial o
+    # en paralelo. 
 
     # Guardar los tiempos en un archivo CSV
     times = {
